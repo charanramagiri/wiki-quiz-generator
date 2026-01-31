@@ -99,3 +99,28 @@ def get_history():
 
     db.close()
     return result
+
+@app.get("/quiz/{article_id}")
+def get_quiz_details(article_id: int):
+    db = SessionLocal()
+
+    article = db.query(Article).filter(Article.id == article_id).first()
+    quizzes = db.query(Quiz).filter(Quiz.article_id == article_id).all()
+
+    db.close()
+
+    return {
+        "title": article.title,
+        "summary": article.summary,
+        "sections": article.sections.split(", "),
+        "quiz": [
+            {
+                "question": q.question,
+                "options": q.options.split(", "),
+                "answer": q.answer,
+                "difficulty": q.difficulty,
+                "explanation": q.explanation
+            }
+            for q in quizzes
+        ]
+    }
