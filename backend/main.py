@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+import re
 import json
 
 # 🔹 Database setup
@@ -14,6 +15,11 @@ from services.quiz_generator import generate_quiz
 
 app = FastAPI(title="Wikipedia Quiz Generator")
 
+def extract_json(text: str):
+    match = re.search(r"\{.*\}", text, re.DOTALL)
+    if not match:
+        raise ValueError("No JSON found in LLM response")
+    return json.loads(match.group())
 
 @app.get("/")
 def root():
@@ -40,7 +46,8 @@ def generate_quiz_api(url: str):
 
         # Generate quiz (AI response)
         quiz_response = generate_quiz(scraped["title"], scraped["full_text"])
-        quiz_json = json.loads(quiz_response)
+        quiz_json = extract_json(quiz_response)
+
 
         # Check if article already exists
         article = db.query(Article).filter(Article.url == url).first()
