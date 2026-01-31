@@ -9,14 +9,37 @@ function showTab(tab) {
 
 async function generateQuiz() {
   const url = document.getElementById("wikiUrl").value;
+
+  // Step 1: generate & store quiz
   const res = await fetch(`${API}/generate-quiz?url=${encodeURIComponent(url)}`, {
     method: "POST"
   });
-  const data = await res.json();
+  const genData = await res.json();
 
-  document.getElementById("quizResult").innerHTML =
-    `<p><b>${data.title}</b> – ${data.quiz_count} questions generated</p>`;
+  // Step 2: fetch full quiz using article_id
+  const quizRes = await fetch(`${API}/quiz/${genData.article_id}`);
+  const quizData = await quizRes.json();
+
+  // Step 3: render quiz
+  let html = `<h2>${quizData.title}</h2><p>${quizData.summary}</p>`;
+
+  quizData.quiz.forEach((q, index) => {
+    html += `<div style="border:1px solid #ccc; padding:10px; margin:10px 0">
+      <p><b>Q${index + 1}. ${q.question}</b></p>`;
+
+    for (let key in q.options) {
+      html += `<p>${key}: ${q.options[key]}</p>`;
+    }
+
+    html += `<p><i>Answer:</i> ${q.answer}</p>
+             <p><i>Difficulty:</i> ${q.difficulty}</p>
+             <p><i>Explanation:</i> ${q.explanation}</p>
+    </div>`;
+  });
+
+  document.getElementById("quizResult").innerHTML = html;
 }
+
 
 async function loadHistory() {
   const res = await fetch(`${API}/history`);

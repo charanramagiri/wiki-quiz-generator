@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware  # ✅ ADDED: CORS middleware import
 import re
 import json
 
@@ -15,11 +16,21 @@ from services.quiz_generator import generate_quiz
 
 app = FastAPI(title="Wikipedia Quiz Generator")
 
+# ✅ ADDED: CORS configuration to allow frontend access
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5500"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 def extract_json(text: str):
     match = re.search(r"\{.*\}", text, re.DOTALL)
     if not match:
         raise ValueError("No JSON found in LLM response")
     return json.loads(match.group())
+
 
 @app.get("/")
 def root():
@@ -47,7 +58,6 @@ def generate_quiz_api(url: str):
         # Generate quiz (AI response)
         quiz_response = generate_quiz(scraped["title"], scraped["full_text"])
         quiz_json = extract_json(quiz_response)
-
 
         # Check if article already exists
         article = db.query(Article).filter(Article.url == url).first()
@@ -100,6 +110,7 @@ def generate_quiz_api(url: str):
     finally:
         db.close()
 
+
 @app.get("/history")
 def get_history():
     db = SessionLocal()
@@ -115,6 +126,7 @@ def get_history():
 
     db.close()
     return result
+
 
 @app.get("/quiz/{article_id}")
 def get_quiz_details(article_id: int):
