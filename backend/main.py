@@ -1,16 +1,24 @@
 from fastapi import FastAPI, HTTPException
-from services.scraper import scrape_wikipedia
-from services.quiz_generator import generate_quiz
-from database import engine
-from models import Base
+import json
 
+# 🔹 Database setup
+from database import engine, SessionLocal
+from models import Base, Article, Quiz
+
+# 🔹 Create tables automatically at startup
 Base.metadata.create_all(bind=engine)
 
+# 🔹 Services
+from services.scraper import scrape_wikipedia
+from services.quiz_generator import generate_quiz
+
 app = FastAPI(title="Wikipedia Quiz Generator")
+
 
 @app.get("/")
 def root():
     return {"message": "Backend is running successfully"}
+
 
 @app.post("/scrape")
 def scrape_article(url: str):
@@ -20,17 +28,58 @@ def scrape_article(url: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+
+# 🔹 UPDATED ENDPOINT (STEP 4.6)
 @app.post("/generate-quiz")
 def generate_quiz_api(url: str):
+    db = SessionLocal()
+
     try:
+        # Scrape article
         scraped = scrape_wikipedia(url)
-        quiz_data = generate_quiz(scraped["title"], scraped["full_text"])
+
+        # Generate quiz (AI response)
+        quiz_response = generate_quiz(scraped["title"], scraped["full_text"])
+        quiz_json = json.loads(quiz_response)
+
+        # Check if article already exists
+        article = db.query(Article).filter(Article.url == url).first()
+
+        if not article:
+            article = Article(
+                url=url,
+                title=scraped["title"],
+                summary=scraped["summary"],
+                sections=", ".join(scraped["sections"])
+            )
+            db.add(article)
+            db.commit()
+            db.refresh(article)
+
+        # Save quizzes
+        for q in quiz_json["quiz"]:
+            quiz = Quiz(
+                article_id=article.id,
+                question=q["question"],
+                options=", ".join(q["options"]),
+                answer=q["answer"],
+                difficulty=q["difficulty"],
+                explanation=q["explanation"]
+            )
+            db.add(quiz)
+
+        db.commit()
+
         return {
-            "url": url,
-            "title": scraped["title"],
-            "summary": scraped["summary"],
-            "sections": scraped["sections"],
-            "quiz_data": quiz_data
+            "article_id": article.id,
+            "title": article.title,
+            "quiz_count": len(quiz_json["quiz"]),
+            "related_topics": quiz_json["related_topics"]
         }
+
     except Exception as e:
+        db.rollback()
         raise HTTPException(status_code=400, detail=str(e))
+
+    finally:
+        db.close()
