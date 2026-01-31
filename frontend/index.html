@@ -1,21 +1,46 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Wikipedia Quiz Generator</title>
-    <link rel="stylesheet" href="style.css">
+  <title>Wikipedia Quiz Generator</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <h1>Wikipedia Quiz Generator</h1>
 
 <div class="tabs">
-    <button>Generate Quiz</button>
-    <button>Past Quizzes</button>
+  <button onclick="showTab('generate')">Generate Quiz</button>
+  <button onclick="showTab('history')">Past Quizzes</button>
 </div>
 
-<div class="content">
-    <input type="text" placeholder="Enter Wikipedia URL" />
-    <button>Generate Quiz</button>
+<!-- TAB 1 -->
+<div id="generate" class="tab-content">
+  <input id="wikiUrl" type="text" placeholder="Enter Wikipedia URL">
+  <button onclick="generateQuiz()">Generate Quiz</button>
+
+  <div id="quizResult"></div>
+</div>
+
+<!-- TAB 2 -->
+<div id="history" class="tab-content" style="display:none;">
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="historyTable"></tbody>
+  </table>
+</div>
+
+<!-- MODAL -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">×</span>
+    <div id="modalBody"></div>
+  </div>
 </div>
 
 <script src="script.js"></script>
