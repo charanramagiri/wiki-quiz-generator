@@ -83,3 +83,19 @@ def generate_quiz_api(url: str):
 
     finally:
         db.close()
+
+@app.get("/history")
+def get_history():
+    db = SessionLocal()
+    articles = db.query(Article).all()
+
+    result = []
+    for a in articles:
+        result.append({
+            "id": a.id,
+            "url": a.url,
+            "title": a.title
+        })
+
+    db.close()
+    return result
