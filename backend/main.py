@@ -1,6 +1,10 @@
 from fastapi import FastAPI, HTTPException
 from services.scraper import scrape_wikipedia
 from services.quiz_generator import generate_quiz
+from database import engine
+from models import Base
+
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Wikipedia Quiz Generator")
 
