@@ -123,20 +123,39 @@ def get_quiz_details(article_id: int):
     article = db.query(Article).filter(Article.id == article_id).first()
     quizzes = db.query(Quiz).filter(Quiz.article_id == article_id).all()
 
+    if not article:
+        db.close()
+        raise HTTPException(status_code=404, detail="Article not found")
+
+    quiz_list = []
+
+    for q in quizzes:
+        # SAFE options parsing
+        try:
+            options = json.loads(q.options)
+        except Exception:
+            # fallback for old comma-separated data
+            opts = q.options.split(", ")
+            options = {
+                "A": opts[0] if len(opts) > 0 else "",
+                "B": opts[1] if len(opts) > 1 else "",
+                "C": opts[2] if len(opts) > 2 else "",
+                "D": opts[3] if len(opts) > 3 else ""
+            }
+
+        quiz_list.append({
+            "question": q.question,
+            "options": options,
+            "answer": q.answer,
+            "difficulty": q.difficulty,
+            "explanation": q.explanation
+        })
+
     db.close()
 
     return {
         "title": article.title,
         "summary": article.summary,
         "sections": article.sections.split(", "),
-        "quiz": [
-            {
-                "question": q.question,
-                "options": q.options.split(", "),
-                "answer": q.answer,
-                "difficulty": q.difficulty,
-                "explanation": q.explanation
-            }
-            for q in quizzes
-        ]
+        "quiz": quiz_list
     }
