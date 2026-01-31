@@ -65,10 +65,19 @@ def generate_quiz_api(url: str):
 
         # Save quizzes
         for q in quiz_json["quiz"]:
+            options_list = q["options"]
+
+            options_map = {
+                "A": options_list[0],
+                "B": options_list[1],
+                "C": options_list[2],
+                "D": options_list[3]
+            }
+
             quiz = Quiz(
                 article_id=article.id,
                 question=q["question"],
-                options=", ".join(q["options"]),
+                options=json.dumps(options_map),
                 answer=q["answer"],
                 difficulty=q["difficulty"],
                 explanation=q["explanation"]
