@@ -67,6 +67,11 @@ Sample tested Wikipedia URLs and JSON outputs are available in the `sample_data/
 
 ## How to Run
 
+## Environment Setup
+Create a `.env` file and add:
+GROQ_API_KEY=your_api_key_here
+
+
 ### Backend
 
 cd backend
