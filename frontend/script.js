@@ -40,7 +40,6 @@ async function generateQuiz() {
   document.getElementById("quizResult").innerHTML = html;
 }
 
-
 async function loadHistory() {
   const res = await fetch(`${API}/history`);
   const data = await res.json();
@@ -59,24 +58,33 @@ async function loadHistory() {
   });
 }
 
+/* ✅ NEW DETAILS FUNCTION (NO MODAL) */
 async function openDetails(id) {
   const res = await fetch(`${API}/quiz/${id}`);
   const data = await res.json();
 
   let html = `<h2>${data.title}</h2><p>${data.summary}</p>`;
 
-  data.quiz.forEach(q => {
-    html += `<hr><p><b>${q.question}</b></p>`;
+  data.quiz.forEach((q, index) => {
+    html += `
+      <div style="border:1px solid #ccc; padding:15px; margin:15px 0;">
+        <p><b>Q${index + 1}. ${q.question}</b></p>
+    `;
+
     for (let key in q.options) {
       html += `<p>${key}: ${q.options[key]}</p>`;
     }
-    html += `<p><i>Answer:</i> ${q.answer}</p>`;
+
+    html += `
+        <p><i>Answer:</i> ${q.answer}</p>
+        <p><i>Difficulty:</i> ${q.difficulty}</p>
+        <p><i>Explanation:</i> ${q.explanation}</p>
+      </div>
+    `;
   });
 
-  document.getElementById("modalBody").innerHTML = html;
-  document.getElementById("modal").style.display = "block";
-}
+  document.getElementById("detailsSection").innerHTML = html;
 
-function closeModal() {
-  document.getElementById("modal").style.display = "none";
+  // scroll to details automatically
+  document.getElementById("detailsSection").scrollIntoView({ behavior: "smooth" });
 }

@@ -28,19 +28,32 @@ th, td {
 .modal {
   display: none;
   position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
+  inset: 0;
   background: rgba(0,0,0,0.6);
+  z-index: 1000;
 }
 
 .modal-content {
   background: #fff;
-  padding: 20px;
-  margin: 10% auto;
   width: 60%;
+  margin: 40px auto;
+  padding: 20px;
+  border-radius: 6px;
 }
+
+
+
 
 .close {
   float: right;
+  font-size: 22px;
+  font-weight: bold;
   cursor: pointer;
+}
+
+/* ✅ GUARANTEED SCROLL FIX */
+#modalBody {
+  max-height: 70vh;     /* limits height */
+  overflow-y: auto;    /* enables scroll */
+  padding-right: 10px; /* avoids scrollbar overlap */
 }
