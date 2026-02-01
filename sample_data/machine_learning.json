@@ -1,0 +1,69 @@
+{
+  "title": "Machine learning",
+  "summary": "Machine learning (ML) is a field of study in artificial intelligence concerned with the development and study of statistical algorithms that can learn from data and generalize to unseen data, and thus perform tasks without explicit instructions.[1] Within a subdiscipline in machine learning, advances in the field of deep learning have allowed neural networks, a class of statistical algorithms, to surpass many previous machine learning approaches in performance.\n",
+  "sections": [
+    ""
+  ],
+  "quiz": [
+    {
+      "question": "Who coined the term 'machine learning' in 1959?",
+      "options": {
+        "A": "Arthur Samuel",
+        "B": "Donald Hebb",
+        "C": "Walter Pitts",
+        "D": "Raytheon Company"
+      },
+      "answer": "Arthur Samuel",
+      "difficulty": "easy",
+      "explanation": "According to the article, Arthur Samuel, an IBM employee and pioneer in the field of computer gaming and artificial intelligence, coined the term 'machine learning' in 1959."
+    },
+    {
+      "question": "What is the term for the process of a computer program improving its performance at tasks based on experience?",
+      "options": {
+        "A": "Probabilistic reasoning",
+        "B": "Empirical risk minimisation",
+        "C": "Reinforcement learning",
+        "D": "Learning from experience"
+      },
+      "answer": "Learning from experience",
+      "difficulty": "medium",
+      "explanation": "The article mentions Tom M. Mitchell's definition of machine learning, which states that a computer program learns from experience E with respect to some class of tasks T and performance measure P if its performance at tasks in T, as measured by P, improves with experience E."
+    },
+    {
+      "question": "What type of learning involves a computer program receiving feedback in the form of rewards or penalties?",
+      "options": {
+        "A": "Supervised learning",
+        "B": "Unsupervised learning",
+        "C": "Reinforcement learning",
+        "D": "Generative learning"
+      },
+      "answer": "Reinforcement learning",
+      "difficulty": "medium",
+      "explanation": "The article mentions that AlphaGo obtained victory against top human players using reinforcement learning techniques in 2016."
+    },
+    {
+      "question": "What is the name of the algorithm type that involves training a model on labeled data?",
+      "options": {
+        "A": "Supervised learning algorithms",
+        "B": "Unsupervised learning algorithms",
+        "C": "Reinforcement learning algorithms",
+        "D": "Generative learning algorithms"
+      },
+      "answer": "Supervised learning algorithms",
+      "difficulty": "medium",
+      "explanation": "The article mentions that modern-day machine learning algorithms are broken into three types: Supervised Learning Algorithms, Unsupervised Learning Algorithms, and Reinforcement Learning Algorithms."
+    },
+    {
+      "question": "Who introduced generative adversarial networks (GANs) with realistic data synthesis in 2014?",
+      "options": {
+        "A": "Ian Goodfellow",
+        "B": "Geoffrey Hinton",
+        "C": "David Rumelhart",
+        "D": "John Hopfield"
+      },
+      "answer": "Ian Goodfellow",
+      "difficulty": "hard",
+      "explanation": "The article mentions that Ian Goodfellow and others introduced generative adversarial networks (GANs) with realistic data synthesis in 2014."
+    }
+  ]
+}
